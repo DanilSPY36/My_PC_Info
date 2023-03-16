@@ -1,0 +1,13 @@
+P:\Visual Studio 2022\sours\repos\WinForms\PC_Info\PC_Info\bin\Debug\PC_Info.exe.config
+P:\Visual Studio 2022\sours\repos\WinForms\PC_Info\PC_Info\bin\Debug\PC_Info.exe
+P:\Visual Studio 2022\sours\repos\WinForms\PC_Info\PC_Info\bin\Debug\PC_Info.pdb
+P:\Visual Studio 2022\sours\repos\WinForms\PC_Info\PC_Info\obj\Debug\PC_Info.csproj.AssemblyReference.cache
+P:\Visual Studio 2022\sours\repos\WinForms\PC_Info\PC_Info\obj\Debug\PC_Info.csproj.SuggestedBindingRedirects.cache
+P:\Visual Studio 2022\sours\repos\WinForms\PC_Info\PC_Info\obj\Debug\PC_Info.MainForm.resources
+P:\Visual Studio 2022\sours\repos\WinForms\PC_Info\PC_Info\obj\Debug\PC_Info.Properties.Resources.resources
+P:\Visual Studio 2022\sours\repos\WinForms\PC_Info\PC_Info\obj\Debug\PC_Info.csproj.GenerateResource.cache
+P:\Visual Studio 2022\sours\repos\WinForms\PC_Info\PC_Info\obj\Debug\PC_Info.csproj.CoreCompileInputs.cache
+P:\Visual Studio 2022\sours\repos\WinForms\PC_Info\PC_Info\obj\Debug\PC_Info.exe
+P:\Visual Studio 2022\sours\repos\WinForms\PC_Info\PC_Info\obj\Debug\PC_Info.pdb
+P:\Visual Studio 2022\sours\repos\WinForms\PC_Info\PC_Info\bin\Debug\OpenHardwareMonitorLib.dll
+P:\Visual Studio 2022\sours\repos\WinForms\PC_Info\PC_Info\obj\Debug\PC_Info.csproj.CopyComplete
