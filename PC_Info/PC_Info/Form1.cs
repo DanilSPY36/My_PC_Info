@@ -6,59 +6,111 @@ using System.Windows.Forms;
 using OpenHardwareMonitor.Hardware;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using System.Runtime.InteropServices;
+using OpenHardwareMonitor.Hardware.CPU;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+
 
 namespace PC_Info
 {
     public partial class MainForm : Form
     {
-        BackgroundWorker bw;
         private string tmpInfo = string.Empty;
+        private Computer computer;
+
         public MainForm()
         {
             InitializeComponent();
-            bw = new BackgroundWorker();
-            bw.WorkerReportsProgress= true;
         }
 
-        private void GetCPUTemp()
+        private void TreeViewNodesAdd(object sender, EventArgs e)
         {
-            tmpInfo = string.Empty;
-            Visitor visitor = new Visitor();
-            Computer computer = new Computer();
+            int CPUCores = 0;
             computer.Open();
-            computer.CPUEnabled= true;
-            computer.Accept(visitor);
-
-            for(int i = 0; i < computer.Hardware.Length; i++)
+            computer.Accept(new Visitor());
+            richTextBox1.Text = string.Empty;
+            treeView1.BeginUpdate();
+            foreach (IHardware hardware in computer.Hardware)
             {
-                if (computer.Hardware[i].HardwareType == HardwareType.CPU)
+                treeView1.Nodes.Add(hardware.HardwareType.ToString());
+                foreach (var sensor in hardware.Sensors)
                 {
-                    for (int j = 0; j < computer.Hardware[i].Sensors.Length; j++)
+                    if (sensor.SensorType == SensorType.Load && sensor.Name.Contains("CPU Total"))
                     {
-                        if (computer.Hardware[i].Sensors[j].SensorType == SensorType.Temperature)
-                        {
-                            tmpInfo += $"{ computer.Hardware[i].Sensors[j].Name} : {computer.Hardware[i].Sensors[j].Value.ToString()} \n";
-                        }
-                        else
-                        {
-                            tmpInfo += $"{computer.Hardware[i].Sensors[j].Name} : {computer.Hardware[i].Sensors[j].Value.ToString()} \n";
-                        }
+                        treeView1.Nodes[1].Nodes.Add($"Total: " + ((float)sensor.Value.GetValueOrDefault()).ToString());
+                    }
+                    else if ( sensor.Name.Contains("CPU"))
+                    {
+                        treeView1.Nodes[1].Nodes.Add($"Core #{++CPUCores} : " + ((float)sensor.Value.GetValueOrDefault()).ToString());
                     }
                 }
             }
-            Invoke((MethodInvoker)delegate
-            {
-                richTextBox1.Text = tmpInfo;
+            treeView1.EndUpdate();
+            computer.Close();
+        }
+       
 
-            });
-            //Task.Run(() =>
-            //{
-                
-            //});
+
+        private void GetTemp(object sender, EventArgs e)
+        {
+            computer.Open();
+            computer.Accept(new Visitor());
+            richTextBox1.Text = string.Empty;
+
+            foreach (IHardware hardware in computer.Hardware)
+            {
+                richTextBox1.Text += $"\tHardware: {0} {hardware.Name}\n";
+
+                foreach (IHardware subhardware in hardware.SubHardware)
+                {
+                    richTextBox1.Text += $"\tSubhardware: {0} {subhardware.Name}\n";
+
+                    foreach (ISensor sensor in subhardware.Sensors)
+                    {
+                        richTextBox1.Text +=$"\tSensor: {0}, value: {1} + {sensor.Name} {sensor.Value}\n";
+                    }
+                }
+
+                foreach (ISensor sensor in hardware.Sensors)
+                {
+                    richTextBox1.Text +=$"\tSensor: {0}, value: {1} + {sensor.Name} {sensor.Value}\n";
+                }
+            }
+            
             computer.Close();
         }
 
-        private void GetHardWareInfo(string Key, ListView list)
+        private async Task<string> GetCPUTempAsync()
+        {
+            computer.Open();
+            computer.Accept(new Visitor());
+            tmpInfo = string.Empty;
+            foreach (IHardware hardware in computer.Hardware)
+            {
+                
+                tmpInfo +="Hardware: {0} " + hardware.Name + "\n"; 
+                
+                foreach (IHardware subhardware in hardware.SubHardware)
+                {
+                    
+                    tmpInfo += "\tSubhardware: {0}" +  subhardware.Name+ "\n";
+
+                    foreach (ISensor sensor in subhardware.Sensors)
+                    {
+                        tmpInfo += "\t\tSensor: {0}, value: {1} " +  $"{sensor.Name}  {sensor.Value}"+ "\n";
+                    }
+                }
+
+                foreach (ISensor sensor in hardware.Sensors)
+                {
+                    tmpInfo += "\tSensor: {0}, value: {1} " +  $"{sensor.Name}  {sensor.Value}"+ "\n";
+                }
+            }
+            computer.Close();
+            return tmpInfo;            
+        }
+
+        private void GetHardWareInfo(string Key, System.Windows.Forms.ListView list)
         {
             list.Items.Clear();
             ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM " + Key);
@@ -204,6 +256,15 @@ namespace PC_Info
         private void MainForm_Load(object sender, EventArgs e)
         {
             toolStripComboBox.SelectedIndex = 0;
+            computer = new Computer()
+            {
+                CPUEnabled = true,
+                //GPUEnabled= true,
+                RAMEnabled = true, // uncomment for RAM reports
+                MainboardEnabled = true, // uncomment for Motherboard reports
+                FanControllerEnabled = true, // uncomment for FAN Reports
+                HDDEnabled = true, // uncomment for HDD Report
+            };
         }
 
         private void MainForm_AutoSizeChanged(object sender, EventArgs e)
@@ -211,41 +272,25 @@ namespace PC_Info
             listView1.Columns[1].Width =  Size.Width - listView1.Columns[0].Width;
         }
 
-
-        //private async void Bw_DoWork()
-        //{
-        //    while (true)
-        //    {
-        //        richTextBox1.Text = GetCPUTemp();
-        //        Thread.Sleep(100);
-        //    }
-        //}
-
-        private void tabControl1_Selecting(object sender, TabControlCancelEventArgs e)
+        private async void tabControl1_Selecting(object sender, TabControlCancelEventArgs e)
         {
-            if (tabControl1.SelectedTab.Text == "Temp")
+            
+                TreeViewNodesAdd(sender, e);
+            
+            /*
+            while (tabControl1.SelectedTab.Text == "Temp")
             {
-                //backgroundWorker1.DoWork += (obj, ea) => Bw_DoWork();
-                backgroundWorker1.RunWorkerAsync();
+                richTextBox1.Text = await Task.Run(() => GetCPUTempAsync());
+                await Task.Delay(1000);
             }
-            else
+            //////
+            //////*/
+            while (tabControl1.SelectedTab.Text == "Temp")
             {
-                backgroundWorker1.CancelAsync();
+                GetTemp(sender, e);
+                await Task.Delay(100);
             }
-        }
-
-        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
-        {
-            while (true)
-            {
-                GetCPUTemp();
-                Thread.Sleep(100);
-            }
-        }
-
-        private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-
+            
         }
     }
 }

@@ -36,8 +36,8 @@
             this.toolStrip2 = new System.Windows.Forms.ToolStrip();
             this.toolStripComboBox = new System.Windows.Forms.ToolStripComboBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.treeView1 = new System.Windows.Forms.TreeView();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
-            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.toolStrip2.SuspendLayout();
@@ -126,6 +126,7 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.treeView1);
             this.tabPage2.Controls.Add(this.richTextBox1);
             this.tabPage2.Location = new System.Drawing.Point(4, 26);
             this.tabPage2.Name = "tabPage2";
@@ -135,6 +136,13 @@
             this.tabPage2.Text = "Temp";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // treeView1
+            // 
+            this.treeView1.Location = new System.Drawing.Point(490, 74);
+            this.treeView1.Name = "treeView1";
+            this.treeView1.Size = new System.Drawing.Size(327, 254);
+            this.treeView1.TabIndex = 1;
+            // 
             // richTextBox1
             // 
             this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -143,12 +151,6 @@
             this.richTextBox1.Size = new System.Drawing.Size(954, 552);
             this.richTextBox1.TabIndex = 0;
             this.richTextBox1.Text = "";
-            // 
-            // backgroundWorker1
-            // 
-            this.backgroundWorker1.WorkerSupportsCancellation = true;
-            this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
-            this.backgroundWorker1.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker1_RunWorkerCompleted);
             // 
             // MainForm
             // 
@@ -181,7 +183,7 @@
         private System.Windows.Forms.ToolStripComboBox toolStripComboBox;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.RichTextBox richTextBox1;
-        private System.ComponentModel.BackgroundWorker backgroundWorker1;
+        private System.Windows.Forms.TreeView treeView1;
     }
 }
 

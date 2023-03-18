@@ -9,7 +9,6 @@ namespace PC_Info
         {
             computer.Traverse(this);
         }
-
         public void VisitHardware(IHardware hardware)
         {
             hardware.Update();
@@ -18,15 +17,7 @@ namespace PC_Info
                 hw.Accept(this);
             }
         }
-
-        public void VisitParameter(IParameter parameter)
-        {
-            
-        }
-
-        public void VisitSensor(ISensor sensor)
-        {
-            
-        }
+        public void VisitParameter(IParameter parameter) { }
+        public void VisitSensor(ISensor sensor) { }
     }
 }
